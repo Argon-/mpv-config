@@ -35,7 +35,6 @@
 require "mp.msg"
 
 script_name = mp.get_script_name()
-print(script_name)
 detect_label = string.format("%s-detect", script_name)
 pullup_label = string.format("%s", script_name)
 
