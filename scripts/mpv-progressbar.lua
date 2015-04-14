@@ -1,6 +1,6 @@
 local msg = require('mp.msg')
 local bar_height = 1
-local hover_zone = 20
+local hover_zone = 40
 local log = {
   debug = function(format, ...)
     return msg.debug(format:format(...))
