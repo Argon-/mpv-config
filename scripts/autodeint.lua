@@ -161,8 +161,8 @@ function judge_ivtc()
     else
         mp.msg.info(string.format("interlaced with %s field dominance: setting deinterlace property", mp.get_property("field-dominance")))
         del_filter_if_present(pullup_label)
-        mp.osd_message("autodeint: setting deinterlace property")
-        mp.set_property("deinterlace","yes")
+        mp.osd_message(string.format("autodeint: setting deinterlace property (%s)", mp.get_property("field-dominance")))
+        mp.set_property("deinterlace", "yes")
         stop_detect()
     end
 
