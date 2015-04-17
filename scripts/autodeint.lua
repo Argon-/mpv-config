@@ -96,6 +96,10 @@ progressive, interlaced_tff, interlaced_bff, interlaced = 0, 1, 2, 3, 4
 function judge()
     -- get the metadata
     local result = mp.get_property_native(string.format("vf-metadata/%s", detect_label))
+    -- filter might have been removed by third party
+    if not result or next(result) == nil then
+        return progressive
+    end
     num_tff          = tonumber(result["lavfi.idet.multiple.tff"])
     num_bff          = tonumber(result["lavfi.idet.multiple.bff"])
     num_progressive  = tonumber(result["lavfi.idet.multiple.progressive"])
