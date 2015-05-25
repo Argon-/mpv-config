@@ -165,16 +165,19 @@ for k, v in pairs(options[level]) do
 end
 
 
-function print_status()
-    local duation = 4
+function print_status(name, value)
+    if not value then
+        return
+    end
+
     if err_occ then
         print("Error setting level: " .. level)
-        mp.osd_message("Error setting level: " .. level, duration)
+        mp.osd_message("Error setting level: " .. level)
     else
         print("Active level: " .. level)
-        mp.osd_message("Level: " .. level, duration)
+        mp.osd_message("Level: " .. level)
     end
-    mp.unregister_event(print_status)
+    mp.unobserve_property(print_status)
 end
 
-mp.register_event("file-loaded", print_status)
+mp.observe_property("vo-configured", "bool", print_status)
