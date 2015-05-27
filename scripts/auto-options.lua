@@ -62,6 +62,7 @@ end
 
 
 function vo_property_string(level)
+    -- use `vo` and `vo_opts` to build a `vo=key1=val1:key2=val2:key3=val3` string
     local result = {}
     for k, v in pairs(vo_opts[level]) do
         if v and v ~= "" then
@@ -74,7 +75,7 @@ function vo_property_string(level)
 end
 
 
--- Define VO sub-options for different levels
+-- Define VO sub-options for different levels.
 
 vo = {
     [hq] = "opengl-hq",
@@ -136,14 +137,17 @@ vo_opts[lq] = {
 }
 
 
--- Define options for different levels
+-- Define mpv options for different levels. 
+-- Option names are given as strings, values as functions without parameters.
 
 options[hq] = {
     ["options/vo"] = function () return vo_property_string(hq) end,
 }
+
 options[mq] = {
     ["options/vo"] = function () return vo_property_string(mq) end,
 }
+
 options[lq] = {
     ["options/vo"] = function () return vo_property_string(lq) end,
     ["options/hwdec"] = function () return "auto" end,
