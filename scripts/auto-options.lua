@@ -18,9 +18,9 @@ if mp.get_property_bool("option-info/vo/set-from-commandline") == true then
 end
 
 
-local hq = "high-quality"
-local mq = "mid-quality"
-local lq = "low-quality"
+local hq = "high"
+local mq = "mid"
+local lq = "low"
 local vo = {}
 local vo_opts = {}
 local options = {}
@@ -97,10 +97,11 @@ vo_opts[hq] = {
     ["sigmoid-upscaling"]   = "",
 
     ["fancy-downscaling"] = "",
+    ["source-shader"]     = "~~/shaders/deband.glsl",
+    ["icc-cache-dir"]     = "~~/icc-cache",
+    ["3dlut-size"]        = "256x256x256",
     ["temporal-dither"]   = "",
     ["pbo"] = "",
-    ["3dlut-size"]    = "256x256x256",
-    ["icc-cache-dir"] = "~~/icc-cache",
 }
 
 vo_opts[mq] = {
@@ -118,6 +119,7 @@ vo_opts[mq] = {
     ["sigmoid-upscaling"]   = "",
 
     ["fancy-downscaling"] = "",
+    ["source-shader"]     = "~~/shaders/deband.glsl",
 }
 
 vo_opts[lq] = {
@@ -170,12 +172,13 @@ function print_status(name, value)
         return
     end
 
+    local duration = 4
     if err_occ then
         print("Error setting level: " .. level)
-        mp.osd_message("Error setting level: " .. level)
+        mp.osd_message("Error setting level: " .. level, duration)
     else
         print("Active level: " .. level)
-        mp.osd_message("Level: " .. level)
+        mp.osd_message("Level: " .. level, duration)
     end
     mp.unobserve_property(print_status)
 end
