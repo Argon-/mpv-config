@@ -15,11 +15,17 @@ if mp.get_property_bool("option-info/vo/set-from-commandline") then
     return
 end
 
+local options = require 'mp.options'
 local utils = require 'mp.utils'
 
-local hq = "high"
-local mq = "mid"
-local lq = "low"
+local o = {
+    hq = "high",
+    mq = "mid",
+    lq = "low",
+    verbose = false,
+}
+options.read_options(o)
+
 local vo = {}
 local vo_opts = {}
 local options = {}
@@ -27,7 +33,7 @@ local options = {}
 
 function determine_level()
     -- default level
-    local level = mq
+    local level = o.mq
 
     -- call an external bash function determining if this is a desktop or mobile computer
     loc = {}
@@ -41,18 +47,18 @@ function determine_level()
 
     -- desktop -> hq
     if loc_ret.status == 0 then
-        level = hq
+        level = o.hq
     -- mobile  -> mq/lq
     elseif loc_ret.status == 1 then
-        level = mq
+        level = o.mq
         -- go down to lq when we are on battery
         bat = {}
         bat.args = {"/usr/bin/pmset", "-g", "ac"}
         bat_ret = utils.subprocess(bat)
         if bat_ret.stdout == "No adapter attached.\n" then
-            level = lq
+            level = o.lq
         end
-    else
+    elseif o.verbose then
         print("unable to determine location, using default level: " .. level)
     end
 
@@ -77,12 +83,12 @@ end
 -- Define VO sub-options for different levels.
 
 vo = {
-    [hq] = "opengl-hq",
-    [mq] = "opengl-hq",
-    [lq] = "opengl",
+    [o.hq] = "opengl-hq",
+    [o.mq] = "opengl-hq",
+    [o.lq] = "opengl",
 }
 
-vo_opts[hq] = {
+vo_opts[o.hq] = {
     ["scale"]  = "ewa_lanczossharp",
     ["cscale"] = "ewa_lanczossoft",
     ["dscale"] = "mitchell",
@@ -104,7 +110,7 @@ vo_opts[hq] = {
     ["pbo"] = "",
 }
 
-vo_opts[mq] = {
+vo_opts[o.mq] = {
     ["scale"]  = "spline36",
     ["cscale"] = "spline36",
     ["dscale"] = "mitchell",
@@ -122,7 +128,7 @@ vo_opts[mq] = {
     ["source-shader"]     = "~~/shaders/deband.glsl",
 }
 
-vo_opts[lq] = {
+vo_opts[o.lq] = {
     ["scale"]  = "lanczos",
     ["dscale"] = "mitchell",
     ["tscale"] = "oversample",
@@ -139,16 +145,16 @@ vo_opts[lq] = {
 -- Define mpv options for different levels.
 -- Option names are given as strings, values as functions without parameters.
 
-options[hq] = {
-    ["options/vo"] = function () return vo_property_string(hq) end,
+options[o.hq] = {
+    ["options/vo"] = function () return vo_property_string(o.hq) end,
 }
 
-options[mq] = {
-    ["options/vo"] = function () return vo_property_string(mq) end,
+options[o.mq] = {
+    ["options/vo"] = function () return vo_property_string(o.mq) end,
 }
 
-options[lq] = {
-    ["options/vo"] = function () return vo_property_string(lq) end,
+options[o.lq] = {
+    ["options/vo"] = function () return vo_property_string(o.lq) end,
     ["options/hwdec"] = function () return "auto" end,
 }
 
@@ -161,9 +167,9 @@ for k, v in pairs(options[level]) do
     local val = v()
     success, err = mp.set_property(k, val)
     err_occ = err_occ or not (err_occ or success)
-    if success then
+    if success and o.verbose then
         print("Set '" .. k .. "' to '" .. val .. "'")
-    else
+    elseif o.verbose then
         print("Failed to set '" .. k .. "' to '" .. val .. "'")
         print(err)
     end
