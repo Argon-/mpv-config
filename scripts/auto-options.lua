@@ -5,18 +5,17 @@
 -- General mpv options can be defined in the `options` table while VO
 -- sub-options are to be defined in `vo_opts`.
 --
--- One probably has to reimplement `determine_level()` since it's pretty OS and 
+-- One probably has to reimplement `determine_level()` since it's pretty OS and
 -- user specific.
 --
 -- Note: this requires `force-window=no`, otherwise it's already too late for
 -- some (VO) options to be set/changed.
 
-local utils = require 'mp.utils'
-
-if mp.get_property_bool("option-info/vo/set-from-commandline") == true then
+if mp.get_property_bool("option-info/vo/set-from-commandline") then
     return
 end
 
+local utils = require 'mp.utils'
 
 local hq = "high"
 local mq = "mid"
@@ -137,7 +136,7 @@ vo_opts[lq] = {
 }
 
 
--- Define mpv options for different levels. 
+-- Define mpv options for different levels.
 -- Option names are given as strings, values as functions without parameters.
 
 options[hq] = {
@@ -154,7 +153,7 @@ options[lq] = {
 }
 
 
--- Set all defined options for the determined level
+-- Set all defined options for the determined level.
 
 local level = determine_level()
 local err_occ = false
