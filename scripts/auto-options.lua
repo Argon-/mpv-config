@@ -19,9 +19,9 @@ local options = require 'mp.options'
 local utils = require 'mp.utils'
 
 local o = {
-    hq = "high",
-    mq = "mid",
-    lq = "low",
+    hq = "desktop",
+    mq = "laptop",
+    lq = "laptop (low-power)",
     verbose = false,
 }
 options.read_options(o)
