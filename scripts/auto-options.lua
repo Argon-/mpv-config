@@ -7,9 +7,6 @@
 --
 -- One probably has to reimplement `determine_level()` since it's pretty OS and
 -- user specific.
---
--- Note: this requires `force-window=no`, otherwise it's already too late for
--- some (VO) options to be set/changed.
 
 if mp.get_property_bool("option-info/vo/set-from-commandline") then
     return
@@ -23,6 +20,8 @@ local o = {
     mq = "laptop",
     lq = "laptop (low-power)",
     verbose = false,
+    duration = 4,
+    duration_err_mult = 2,
 }
 options.read_options(o)
 
@@ -97,11 +96,13 @@ vo_opts[o.hq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
-    ["target-prim"]         = "bt.709",
     ["gamma"]               = "0.9338",
+    ["target-prim"]         = "bt.709",
+    --["icc-profile-auto"]    = "",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
 
+    ["interpolation"]     = "",
     ["fancy-downscaling"] = "",
     ["source-shader"]     = "~~/shaders/deband.glsl",
     ["icc-cache-dir"]     = "~~/icc-cache",
@@ -119,11 +120,13 @@ vo_opts[o.mq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
-    ["target-prim"]         = "bt.709",
     ["gamma"]               = "0.9338",
+    ["target-prim"]         = "bt.709",
+    --["icc-profile-auto"]    = "",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
 
+    ["interpolation"]     = "",
     ["fancy-downscaling"] = "",
     ["source-shader"]     = "~~/shaders/deband.glsl",
 }
@@ -135,10 +138,13 @@ vo_opts[o.lq] = {
     ["scale-radius"] = "2",
 
     ["dither-depth"]        = "auto",
-    ["target-prim"]         = "bt.709",
     ["gamma"]               = "0.9338",
+    ["target-prim"]         = "bt.709",
+    --["icc-profile-auto"]    = "",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
+
+    --["interpolation"]     = "",
 }
 
 
@@ -181,13 +187,12 @@ function print_status(name, value)
         return
     end
 
-    local duration = 4
     if err_occ then
         print("Error setting level: " .. level)
-        mp.osd_message("Error setting level: " .. level, duration)
+        mp.osd_message("Error setting level: " .. level, o.duration * o.duration_err_mult)
     else
         print("Active level: " .. level)
-        mp.osd_message("Level: " .. level, duration)
+        mp.osd_message("Level: " .. level, o.duration)
     end
     mp.unobserve_property(print_status)
 end
