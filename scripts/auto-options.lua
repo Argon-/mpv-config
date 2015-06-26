@@ -90,7 +90,7 @@ vo = {
 vo_opts[o.hq] = {
     ["scale"]  = "ewa_lanczossharp",
     ["cscale"] = "ewa_lanczossoft",
-    ["dscale"] = "mitchell",
+    ["dscale"] = "robidouxsharp",
     ["tscale"] = "oversample",
     ["scale-antiring"]  = "0.8",
     ["cscale-antiring"] = "0.9",
@@ -114,7 +114,7 @@ vo_opts[o.hq] = {
 vo_opts[o.mq] = {
     ["scale"]  = "spline36",
     ["cscale"] = "spline36",
-    ["dscale"] = "mitchell",
+    ["dscale"] = "robidouxsharp",
     ["tscale"] = "oversample",
     ["scale-antiring"]  = "0.8",
     ["cscale-antiring"] = "0.9",
@@ -153,10 +153,13 @@ vo_opts[o.lq] = {
 
 options[o.hq] = {
     ["options/vo"] = function () return vo_property_string(o.hq) end,
+    ["options/hwdec"] = function () return "no" end,
+    ["options/vd-lavc-threads"] = function () return "16" end,
 }
 
 options[o.mq] = {
     ["options/vo"] = function () return vo_property_string(o.mq) end,
+    ["options/hwdec"] = function () return "no" end,
 }
 
 options[o.lq] = {
