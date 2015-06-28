@@ -1,3 +1,5 @@
+-- From: https://github.com/mpv-player/mpv/tree/master/TOOLS/lua
+--
 -- This script uses the lavfi idet filter to automatically insert the
 -- appropriate deinterlacing filter based on a short section of the
 -- currently playing video.
@@ -109,7 +111,7 @@ function judge()
 
     mp.msg.verbose("progressive    = "..num_progressive)
     mp.msg.verbose("interlaced-tff = "..num_tff)
-    mp.msg.verbose("interlaced-bff = "..num_bff) 
+    mp.msg.verbose("interlaced-bff = "..num_bff)
     mp.msg.verbose("undetermined   = "..num_undetermined)
 
     if num_determined < num_undetermined then

@@ -20,7 +20,7 @@ local o = {
     mq = "laptop",
     lq = "laptop (low-power)",
     verbose = false,
-    duration = 4,
+    duration = 5,
     duration_err_mult = 2,
 }
 options.read_options(o)
@@ -185,6 +185,16 @@ for k, v in pairs(options[level]) do
 end
 
 
+-- Print status information to VO window and terminal.
+
+function set_ASS(b)
+    return mp.get_property_osd("osd-ass-cc/" .. (b and "0" or "1"))
+end
+
+function red_border(s)
+    return set_ASS(true) .. "{\\bord1}{\\3c&H3300FF&}{\\3a&H20&}" .. s .. "{\\r}" .. set_ASS(false)
+end
+
 function print_status(name, value)
     if not value then
         return
@@ -192,7 +202,7 @@ function print_status(name, value)
 
     if err_occ then
         print("Error setting level: " .. level)
-        mp.osd_message("Error setting level: " .. level, o.duration * o.duration_err_mult)
+        mp.osd_message(red_border("Error setting level: ") .. level, o.duration * o.duration_err_mult)
     else
         print("Active level: " .. level)
         mp.osd_message("Level: " .. level, o.duration)
