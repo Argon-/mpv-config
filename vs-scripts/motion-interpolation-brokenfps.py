@@ -22,7 +22,7 @@ clip = video_in
 
 if not (clip.width > max_width or clip.height > max_height or container_fps > max_fps):
     print('motion-interpolation: {0} -> {1} ({2}) FPS'
-          .format(container_fps, (target_num / target_den), display_fps))
+          .format(source_num / source_den, target_num / target_den, display_fps))
 
     clip = core.std.AssumeFPS(clip, fpsnum=source_num, fpsden=source_den)
     sup  = core.mv.Super(clip, pel=2, hpad=blocksize, vpad=blocksize)
