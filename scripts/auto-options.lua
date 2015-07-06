@@ -90,8 +90,8 @@ vo = {
 vo_opts[o.hq] = {
     ["scale"]  = "ewa_lanczossharp",
     ["cscale"] = "ewa_lanczossoft",
-    ["dscale"] = "robidouxsharp",
-    ["tscale"] = "oversample",
+    ["dscale"] = "mitchell",
+    ["tscale"] = "robidouxsharp",
     ["scale-antiring"]  = "0.8",
     ["cscale-antiring"] = "0.9",
 
@@ -108,14 +108,13 @@ vo_opts[o.hq] = {
     ["icc-cache-dir"]     = "~~/icc-cache",
     ["3dlut-size"]        = "256x256x256",
     ["temporal-dither"]   = "",
-    ["pbo"] = "",
 }
 
 vo_opts[o.mq] = {
     ["scale"]  = "spline36",
     ["cscale"] = "spline36",
-    ["dscale"] = "robidouxsharp",
-    ["tscale"] = "oversample",
+    ["dscale"] = "mitchell",
+    ["tscale"] = "robidouxsharp",
     ["scale-antiring"]  = "0.8",
     ["cscale-antiring"] = "0.9",
 
@@ -132,9 +131,9 @@ vo_opts[o.mq] = {
 }
 
 vo_opts[o.lq] = {
-    ["scale"]  = "lanczos",
+    ["scale"]  = "spline36",
     ["dscale"] = "mitchell",
-    ["tscale"] = "oversample",
+    ["tscale"] = "robidouxsharp",
     ["scale-radius"] = "2",
 
     ["dither-depth"]        = "auto",
