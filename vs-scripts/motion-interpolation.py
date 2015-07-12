@@ -13,10 +13,10 @@ max_fps    = 60
 target_num = 60 if display_fps < 23.9 or display_fps > 300 else display_fps
 while (target_num > max_fps):
     target_num /= 2
-target_num = int(target_num * 1e8)
-target_den = int(1e8)
-source_num = int(container_fps * 1e8)
-source_den = int(1e8)
+target_num = int(target_num * 1e6)
+target_den = int(1e6)
+source_num = int(container_fps * 1e6)
+source_den = int(1e6)
 
 clip = video_in
 
