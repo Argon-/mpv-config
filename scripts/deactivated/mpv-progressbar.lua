@@ -1,8 +1,6 @@
--- From: https://github.com/onodera-punpun/mpv-progressbar
---
 local msg = require('mp.msg')
-local bar_height = 1
-local hover_zone = 30
+local bar_height = 2
+local hover_zone = 20
 local log = {
   debug = function(format, ...)
     return msg.debug(format:format(...))
@@ -17,7 +15,7 @@ local log = {
     local level = 2
     if "table" ~= type(item) then
       msg.info(tostring(item))
-      return
+      return 
     end
     local count = 1
     local tablecount = 1
@@ -65,7 +63,7 @@ do
   local _base_0 = {
     addSubscriber = function(self, subscriber)
       if not subscriber then
-        return
+        return 
       end
       self.subscriberCount = self.subscriberCount + 1
       subscriber.aggregatorIndex = self.subscriberCount
@@ -199,14 +197,14 @@ do
     end,
     startAnimation = function(self)
       if self.animating then
-        return
+        return 
       end
       self.timer:resume()
       self.animating = true
     end,
     stopAnimation = function(self)
       if not (self.animating) then
-        return
+        return 
       end
       self.timer:kill()
       self.animating = false
@@ -817,7 +815,7 @@ do
       local timeElapsed = math.floor(mp.get_property_number('time-pos', 0))
       if timeElapsed ~= self.lastTime then
         update = true
-        self.line[4] = ([[%02d:%02d]]):format((timeElapsed / 60) % 60, timeElapsed % 60)
+        self.line[4] = ([[%d:%02d:%02d]]):format(timeElapsed / 3600, (timeElapsed / 60) % 60, timeElapsed % 60)
         self.lastTime = timeElapsed
       end
       return update
@@ -888,7 +886,7 @@ do
       local timeRemaining = math.floor(mp.get_property_number('playtime-remaining', 0))
       if timeRemaining ~= self.lastTime then
         update = true
-        self.line[4] = ([[%02d:%02d]]):format((timeRemaining / 60) % 60, timeRemaining % 60)
+        self.line[4] = ([[%d:%02d:%02d]]):format(timeRemaining / 3600, (timeRemaining / 60) % 60, timeRemaining % 60)
         self.lastTime = timeRemaining
       end
       return update
@@ -956,7 +954,7 @@ do
         local hoverTime = mp.get_property_number('length', 0) * mouseX / self.w
         if hoverTime ~= self.lastTime and (self.hovered or self.animation.isRegistered) then
           update = true
-          self.line[6] = ([[%02d:%02d]]):format((hoverTime / 60) % 60, hoverTime % 60)
+          self.line[6] = ([[%d:%02d:%02d]]):format(hoverTime / 3600, (hoverTime / 60) % 60, hoverTime % 60)
           self.lastTime = hoverTime
         end
       end

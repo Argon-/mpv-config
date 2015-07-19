@@ -34,6 +34,16 @@ function determine_level()
     -- default level
     local level = o.mq
 
+    -- overwrite with --script-opts=ao-level=value
+    local overwrite = mp.get_opt("ao-level")
+    if overwrite then
+        if not (vo[overwrite] and vo_opts[overwrite] and options[overwrite]) then
+            print("Forced level does not exist: " .. overwrite)
+            return level
+        end
+        return overwrite
+    end
+
     -- call an external bash function determining if this is a desktop or mobile computer
     loc = {}
     loc.args = {"bash", "-c", 'source "$HOME"/local/shell/location-detection && is-desktop'}
@@ -76,6 +86,16 @@ function vo_property_string(level)
         end
     end
     return vo[level] .. (next(result) == nil and "" or (":" .. table.concat(result, ":")))
+end
+
+
+function set_ASS(b)
+    return mp.get_property_osd("osd-ass-cc/" .. (b and "0" or "1"))
+end
+
+
+function red_border(s)
+    return set_ASS(true) .. "{\\bord1}{\\3c&H3300FF&}{\\3a&H20&}" .. s .. "{\\r}" .. set_ASS(false)
 end
 
 
@@ -184,14 +204,6 @@ end
 
 
 -- Print status information to VO window and terminal.
-
-function set_ASS(b)
-    return mp.get_property_osd("osd-ass-cc/" .. (b and "0" or "1"))
-end
-
-function red_border(s)
-    return set_ASS(true) .. "{\\bord1}{\\3c&H3300FF&}{\\3a&H20&}" .. s .. "{\\r}" .. set_ASS(false)
-end
 
 function print_status(name, value)
     if not value then
