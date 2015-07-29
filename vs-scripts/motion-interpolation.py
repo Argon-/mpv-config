@@ -9,13 +9,15 @@ max_fps    = 60
 # use BlockFPS instead of FlowFPS for content exceeding the limits below
 max_flow_width  = 1280
 max_flow_height = 720
-# a block is considered as changed when 8*8*x > th_req_diff with 8*8 being the
-# size of a block (scaled internally) and x the difference of each pixel
-# within this block, default 400
-th_req_diff = 8*8*8
+# a block is considered as changed when 8*8*x > th_block|flow_diff with 8*8
+# being the size of a block (scaled internally) and x the difference of each
+# pixel within this block, default 400
+th_block_diff = 8*8*7
+th_flow_diff  = 8*8*8
 # (threshold/255)% blocks have to change to consider this a scene change
 # (= no motion compensation), default 130
-th_num_changed = 40
+th_block_changed = 12
+th_flow_changed  = 40
 # size of blocks the analyse step is performed on
 blocksize  = 2**5
 
@@ -43,13 +45,12 @@ if not (clip.width > max_width or clip.height > max_height or container_fps > ma
 
     if clip.width > max_flow_width or clip.height > max_flow_height:
         clip = core.mv.BlockFPS(clip, sup, bv, fv, num=target_num, den=target_den,
-                                mode=3, thscd1=th_req_diff, thscd2=th_num_changed)
+                                mode=3, thscd1=th_block_diff, thscd2=th_block_changed)
     else:
         clip = core.mv.FlowFPS(clip, sup, bv, fv, num=target_num, den=target_den,
-                               mask=0, thscd1=th_req_diff, thscd2=th_num_changed)
+                               mask=0, thscd1=th_flow_diff, thscd2=th_flow_changed)
 else:
     print('motion-interpolation: skipping {0}x{1} {2} FPS video'
           .format(clip.width, clip.height, container_fps))
-
 
 clip.set_output()
