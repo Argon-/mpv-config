@@ -2,11 +2,23 @@ import vapoursynth as vs
 core = vs.get_core()
 
 
-threshold  = 12    # (threshold/255)% blocks have to change to consider this a scene change
-blocksize  = 16
+# skip motion interpolation completely for content exceeding the limits below
 max_width  = 1920
 max_height = 1200
 max_fps    = 60
+# use BlockFPS instead of FlowFPS for content exceeding the limits below
+max_flow_width  = 1280
+max_flow_height = 720
+# a block is considered as changed when 8*8*x > th_req_diff with 8*8 being the
+# size of a block (scaled internally) and x the difference of each pixel
+# within this block, default 400
+th_req_diff = 8*8*8
+# (threshold/255)% blocks have to change to consider this a scene change
+# (= no motion compensation), default 130
+th_num_changed = 40
+# size of blocks the analyse step is performed on
+blocksize  = 2**5
+
 
 
 # assume display_fps to be bogus when not in a certain range
@@ -26,9 +38,15 @@ if not (clip.width > max_width or clip.height > max_height or container_fps > ma
 
     clip = core.std.AssumeFPS(clip, fpsnum=source_num, fpsden=source_den)
     sup  = core.mv.Super(clip, pel=2, hpad=blocksize, vpad=blocksize)
-    bv   = core.mv.Analyse(sup, blksize=blocksize, isb=True , chroma=True, search=3, searchparam=1)
-    fv   = core.mv.Analyse(sup, blksize=blocksize, isb=False, chroma=True, search=3, searchparam=1)
-    clip = core.mv.BlockFPS(clip, sup, bv, fv, num=target_num, den=target_den, mode=3, thscd2=threshold)
+    bv   = core.mv.Analyse(sup, blksize=blocksize, isb=True , chroma=True, search=3, searchparam=2)
+    fv   = core.mv.Analyse(sup, blksize=blocksize, isb=False, chroma=True, search=3, searchparam=2)
+
+    if clip.width > max_flow_width or clip.height > max_flow_height:
+        clip = core.mv.BlockFPS(clip, sup, bv, fv, num=target_num, den=target_den,
+                                mode=3, thscd1=th_req_diff, thscd2=th_num_changed)
+    else:
+        clip = core.mv.FlowFPS(clip, sup, bv, fv, num=target_num, den=target_den,
+                               mask=0, thscd1=th_req_diff, thscd2=th_num_changed)
 else:
     print('motion-interpolation: skipping {0}x{1} {2} FPS video'
           .format(clip.width, clip.height, container_fps))

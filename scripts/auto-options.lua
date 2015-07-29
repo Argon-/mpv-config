@@ -51,7 +51,7 @@ function determine_level()
 
     -- something went wrong
     if loc_ret.error then
-        return level
+        loc_ret.status = 255
     end
 
     -- desktop -> hq
