@@ -1,5 +1,9 @@
 -- Set options dynamically.
--- Upon start, `determine_level()` will select a level (hq/mq/lq)
+-- The script aborts without doing anything when you specified a `--vo` option
+-- from command line. You can also use `--script-opts=ao-level=<level>`
+-- to force a specific level from command line.
+--
+-- Upon start, `determine_level()` will select a level (o.hq/o.mq/o.lq)
 -- whose options will then be applied.
 --
 -- General mpv options can be defined in the `options` table while VO
@@ -8,6 +12,8 @@
 -- One probably has to reimplement `determine_level()` since it's pretty OS and
 -- user specific.
 
+
+-- Don't do anything when mpv was called with an explicitly passed --vo option
 if mp.get_property_bool("option-info/vo/set-from-commandline") then
     return
 end
@@ -25,16 +31,18 @@ local o = {
 }
 options.read_options(o)
 
+-- Tables containing the options to set. Possible levels are considered keys
+-- in these tables, values are specified further below.
 local vo = {}
 local vo_opts = {}
 local options = {}
 
 
 function determine_level()
-    -- default level
+    -- Default level
     local level = o.mq
 
-    -- overwrite with --script-opts=ao-level=value
+    -- Overwrite level from command line with --script-opts=ao-level=<level>
     local overwrite = mp.get_opt("ao-level")
     if overwrite then
         if not (vo[overwrite] and vo_opts[overwrite] and options[overwrite]) then
@@ -44,23 +52,23 @@ function determine_level()
         return overwrite
     end
 
-    -- call an external bash function determining if this is a desktop or mobile computer
+    -- Call an external bash function determining if this is a desktop or laptop
     loc = {}
     loc.args = {"bash", "-c", 'source "$HOME"/local/shell/location-detection && is-desktop'}
     loc_ret = utils.subprocess(loc)
 
-    -- something went wrong
+    -- Something went wrong
     if loc_ret.error then
         loc_ret.status = 255
     end
 
-    -- desktop -> hq
+    -- Desktop -> hq
     if loc_ret.status == 0 then
         level = o.hq
-    -- mobile  -> mq/lq
+    -- Laptop  -> mq/lq
     elseif loc_ret.status == 1 then
         level = o.mq
-        -- go down to lq when we are on battery
+        -- Go down to lq when we are on battery
         bat = {}
         bat.args = {"/usr/bin/pmset", "-g", "ac"}
         bat_ret = utils.subprocess(bat)
@@ -75,8 +83,8 @@ function determine_level()
 end
 
 
+-- Use tables `vo` and `vo_opts` to build a `vo=key1=val1:key2=val2` string
 function vo_property_string(level)
-    -- use `vo` and `vo_opts` to build a `vo=key1=val1:key2=val2:key3=val3` string
     local result = {}
     for k, v in pairs(vo_opts[level]) do
         if v and v ~= "" then
@@ -99,13 +107,16 @@ function red_border(s)
 end
 
 
--- Define VO sub-options for different levels.
+-- Define VO for different levels
 
 vo = {
     [o.hq] = "opengl-hq",
     [o.mq] = "opengl-hq",
     [o.lq] = "opengl",
 }
+
+
+-- Define VO sub-options for different levels
 
 vo_opts[o.hq] = {
     ["scale"]  = "ewa_lanczossharp",
@@ -116,8 +127,8 @@ vo_opts[o.hq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
-    --["icc-profile-auto"]    = "",
     ["gamma"]               = "0.9338",
+    --["icc-profile-auto"]    = "",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
@@ -139,8 +150,8 @@ vo_opts[o.mq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
+    ["gamma"]               = "0.9338",
     --["icc-profile-auto"]    = "",
-    --["gamma"]               = "0.9338",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
@@ -156,8 +167,8 @@ vo_opts[o.lq] = {
     ["tscale"] = "oversample",
 
     ["dither-depth"]        = "auto",
+    ["gamma"]               = "0.9338",
     --["icc-profile-auto"]    = "",
-    --["gamma"]               = "0.9338",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
@@ -167,7 +178,7 @@ vo_opts[o.lq] = {
 
 
 -- Define mpv options for different levels.
--- Option names are given as strings, values as functions without parameters.
+-- Option names (keys) are given as strings, values as functions without parameters.
 
 options[o.hq] = {
     ["options/vo"] = function () return vo_property_string(o.hq) end,
@@ -186,7 +197,7 @@ options[o.lq] = {
 }
 
 
--- Set all defined options for the determined level.
+-- Set all defined options for the determined level
 
 local level = determine_level()
 local err_occ = false
@@ -203,7 +214,7 @@ for k, v in pairs(options[level]) do
 end
 
 
--- Print status information to VO window and terminal.
+-- Print status information to VO window and terminal
 
 function print_status(name, value)
     if not value then
