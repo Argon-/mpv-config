@@ -13,11 +13,11 @@ max_flow_height = 720
 # being the size of a block (scaled internally) and x the difference of each
 # pixel within this block, default 400
 th_block_diff = 8*8*7
-th_flow_diff  = 8*8*8
+th_flow_diff  = 8*8*4
 # (threshold/255)% blocks have to change to consider this a scene change
 # (= no motion compensation), default 130
-th_block_changed = 12
-th_flow_changed  = 40
+th_block_changed = 16
+th_flow_changed  = 25
 # size of blocks the analyse step is performed on
 blocksize  = 2**5
 
