@@ -127,7 +127,6 @@ vo_opts[o.hq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
-    ["gamma"]               = "0.9338",
     --["icc-profile-auto"]    = "",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
@@ -150,7 +149,6 @@ vo_opts[o.mq] = {
     ["cscale-antiring"] = "0.9",
 
     ["dither-depth"]        = "auto",
-    ["gamma"]               = "0.9338",
     --["icc-profile-auto"]    = "",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
@@ -167,7 +165,6 @@ vo_opts[o.lq] = {
     ["tscale"] = "oversample",
 
     ["dither-depth"]        = "auto",
-    ["gamma"]               = "0.9338",
     --["icc-profile-auto"]    = "",
     ["target-prim"]         = "bt.709",
     ["scaler-resizes-only"] = "",
