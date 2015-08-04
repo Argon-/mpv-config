@@ -12,14 +12,14 @@ max_flow_height = 720
 # a block is considered as changed when 8*8*x > th_block|flow_diff with 8*8
 # being the size of a block (scaled internally) and x the difference of each
 # pixel within this block, default 400
-th_block_diff = 8*8*7
-th_flow_diff  = 8*8*4
+th_block_diff = 8*8*8
+th_flow_diff  = 8*8*5
 # (threshold/255)% blocks have to change to consider this a scene change
 # (= no motion compensation), default 130
-th_block_changed = 16
-th_flow_changed  = 25
+th_block_changed = 15
+th_flow_changed  = 20
 # size of blocks the analyse step is performed on
-blocksize  = 2**5
+blocksize  = 2**4
 
 
 
@@ -35,7 +35,7 @@ source_den = int(1e6)
 clip = video_in
 
 if not (clip.width > max_width or clip.height > max_height or container_fps > max_fps):
-    print('motion-interpolation: {0} -> {1} ({2}) FPS'
+    print('motion-interpolation: {0} -> {1} FPS ({2}Hz display)'
           .format(source_num / source_den, target_num / target_den, display_fps))
 
     clip = core.std.AssumeFPS(clip, fpsnum=source_num, fpsden=source_den)
