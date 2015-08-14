@@ -86,9 +86,11 @@ end
 
 -- Use tables `vo` and `vo_opts` to build a `vo=key1=val1:key2=val2` string
 function vo_property_string(level, vo, vo_opts)
-    print("vo_property_string")
     local result = {}
     for k, v in pairs(vo_opts[level]) do
+        if type(v) == "function" then
+            v = v()
+        end
         if v and v ~= "" then
             table.insert(result, k .. "=" ..v)
         else
@@ -188,18 +190,18 @@ vo_opts[o.lq] = {
 
 options[o.hq] = {
     ["options/vo"] = function () return vo_property_string(o.hq, vo, vo_opts) end,
-    ["options/hwdec"] = function () return "no" end,
-    ["options/vd-lavc-threads"] = function () return "16" end,
+    ["options/hwdec"] = "no",
+    ["options/vd-lavc-threads"] = "16",
 }
 
 options[o.mq] = {
     ["options/vo"] = function () return vo_property_string(o.mq, vo, vo_opts) end,
-    ["options/hwdec"] = function () return "no" end,
+    ["options/hwdec"] = "no",
 }
 
 options[o.lq] = {
     ["options/vo"] = function () return vo_property_string(o.lq, vo, vo_opts) end,
-    ["options/hwdec"] = function () return "auto" end,
+    ["options/hwdec"] = "auto",
 }
 
 
@@ -208,13 +210,15 @@ options[o.lq] = {
 local level = determine_level(o)
 local err_occ = false
 for k, v in pairs(options[level]) do
-    local val = v()
-    success, err = mp.set_property(k, val)
+    if type(v) == "function" then
+        v = v()
+    end
+    success, err = mp.set_property(k, v)
     err_occ = err_occ or not (err_occ or success)
     if success and o.verbose then
-        print("Set '" .. k .. "' to '" .. val .. "'")
+        print("Set '" .. k .. "' to '" .. v .. "'")
     elseif o.verbose then
-        print("Failed to set '" .. k .. "' to '" .. val .. "'")
+        print("Failed to set '" .. k .. "' to '" .. v .. "'")
         print(err)
     end
 end
