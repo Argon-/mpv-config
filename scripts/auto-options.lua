@@ -25,6 +25,7 @@ local o = {
     hq = "desktop",
     mq = "laptop",
     lq = "laptop (low-power)",
+    highres_threshold = "1920:1200",
     verbose = false,
     duration = 5,
     duration_err_mult = 2,
@@ -38,7 +39,7 @@ local vo_opts = {}
 local options = {}
 
 
-function determine_level()
+function determine_level(o)
     -- Default level
     local level = o.mq
 
@@ -84,7 +85,8 @@ end
 
 
 -- Use tables `vo` and `vo_opts` to build a `vo=key1=val1:key2=val2` string
-function vo_property_string(level)
+function vo_property_string(level, vo, vo_opts)
+    print("vo_property_string")
     local result = {}
     for k, v in pairs(vo_opts[level]) do
         if v and v ~= "" then
@@ -94,6 +96,14 @@ function vo_property_string(level)
         end
     end
     return vo[level] .. (next(result) == nil and "" or (":" .. table.concat(result, ":")))
+end
+
+
+function is_high_res(o)
+    sp = {}
+    sp.args = {"/usr/local/bin/resolution", "compare", o.highres_threshold}
+    sp_ret = utils.subprocess(sp)
+    return not sp_ret.error and sp_ret.status > 2
 end
 
 
@@ -132,12 +142,11 @@ vo_opts[o.hq] = {
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
 
-    --["interpolation"]     = "",
+    --["interpolation"]     = is_high_res(o) and "no" or "yes",
     ["fancy-downscaling"] = "",
     ["source-shader"]     = "~~/shaders/deband.glsl",
     ["icc-cache-dir"]     = "~~/icc-cache",
     ["3dlut-size"]        = "256x256x256",
-    ["temporal-dither"]   = "",
 }
 
 vo_opts[o.mq] = {
@@ -154,7 +163,7 @@ vo_opts[o.mq] = {
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
 
-    --["interpolation"]     = "",
+    ["interpolation"]     = is_high_res(o) and "no" or "yes",
     ["fancy-downscaling"] = "",
     ["source-shader"]     = "~~/shaders/deband.glsl",
 }
@@ -170,7 +179,7 @@ vo_opts[o.lq] = {
     ["scaler-resizes-only"] = "",
     ["sigmoid-upscaling"]   = "",
 
-    --["interpolation"]     = "",
+    --["interpolation"]     = is_high_res(o) and "no" or "yes",
 }
 
 
@@ -178,25 +187,25 @@ vo_opts[o.lq] = {
 -- Option names (keys) are given as strings, values as functions without parameters.
 
 options[o.hq] = {
-    ["options/vo"] = function () return vo_property_string(o.hq) end,
+    ["options/vo"] = function () return vo_property_string(o.hq, vo, vo_opts) end,
     ["options/hwdec"] = function () return "no" end,
     ["options/vd-lavc-threads"] = function () return "16" end,
 }
 
 options[o.mq] = {
-    ["options/vo"] = function () return vo_property_string(o.mq) end,
+    ["options/vo"] = function () return vo_property_string(o.mq, vo, vo_opts) end,
     ["options/hwdec"] = function () return "no" end,
 }
 
 options[o.lq] = {
-    ["options/vo"] = function () return vo_property_string(o.lq) end,
+    ["options/vo"] = function () return vo_property_string(o.lq, vo, vo_opts) end,
     ["options/hwdec"] = function () return "auto" end,
 }
 
 
 -- Set all defined options for the determined level
 
-local level = determine_level()
+local level = determine_level(o)
 local err_occ = false
 for k, v in pairs(options[level]) do
     local val = v()
