@@ -57,16 +57,18 @@ vo_opts = {
         ["cscale-antiring"] = "0.9",
 
         ["dither-depth"]        = "auto",
-        --["icc-profile-auto"]    = "",
         ["target-prim"]         = "bt.709",
         ["scaler-resizes-only"] = "",
         ["sigmoid-upscaling"]   = "",
+        ["blend-subtitles"]     = "no",
 
-        --["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
+        ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
         ["fancy-downscaling"] = "",
         ["source-shader"]     = "~~/shaders/deband.glsl",
         ["icc-cache-dir"]     = "~~/icc-cache",
-        ["3dlut-size"]        = "256x256x256",
+
+        --["icc-profile-auto"]    = "",
+        --["3dlut-size"]        = "256x256x256",
     },
 
     [o.mq] = {
@@ -78,10 +80,10 @@ vo_opts = {
         ["cscale-antiring"] = "0.9",
 
         ["dither-depth"]        = "auto",
-        --["icc-profile-auto"]    = "",
         ["target-prim"]         = "bt.709",
         ["scaler-resizes-only"] = "",
         ["sigmoid-upscaling"]   = "",
+        ["blend-subtitles"]     = "yes",
 
         ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
         ["fancy-downscaling"] = "",
@@ -94,10 +96,10 @@ vo_opts = {
         ["tscale"] = "oversample",
 
         ["dither-depth"]        = "auto",
-        --["icc-profile-auto"]    = "",
         ["target-prim"]         = "bt.709",
         ["scaler-resizes-only"] = "",
         ["sigmoid-upscaling"]   = "",
+        ["blend-subtitles"]     = "yes",
 
         --["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
     },
@@ -131,7 +133,7 @@ mp.observe_property("vo-configured", "bool",
                     function (name, value) print_status(name, value, o) end)
 
 
--- Set all defined options for the determined level
+-- Determined level and set the appropriate options
 
 function main()
     o.level = determine_level(o, vo, vo_opts, options)

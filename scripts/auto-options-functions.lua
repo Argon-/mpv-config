@@ -68,9 +68,7 @@ end
 
 
 function exec(process)
-    p = {}
-    p.args = process
-    p_ret = utils.subprocess(p)
+    p_ret = utils.subprocess({args = process})
     if p_ret.error and p_ret.error == "init" then
         print("ERROR executable not found: " .. process[1])
     end
@@ -98,7 +96,7 @@ function print_status(name, value, o)
         mp.osd_message(red_border("Error setting level: ") .. o.level, o.duration * o.duration_err_mult)
     else
         print("Active level: " .. o.level)
-        mp.osd_message("Level: " .. o.level, o.duration)
+        mp.osd_message("Level: " .. o.level .. (is_high_res(o) and " HIGH RES" or ""), o.duration)
     end
     mp.unobserve_property(print_status)
 end
