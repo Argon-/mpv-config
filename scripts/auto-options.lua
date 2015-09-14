@@ -58,17 +58,19 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "",
-        ["sigmoid-upscaling"]   = "",
+        ["scaler-resizes-only"] = "yes",
+        ["sigmoid-upscaling"]   = "yes",
         ["blend-subtitles"]     = "no",
 
         ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
-        ["fancy-downscaling"] = "",
-        ["source-shader"]     = "~~/shaders/deband.glsl",
-        ["icc-cache-dir"]     = "~~/icc-cache",
+        ["fancy-downscaling"] = "yes",
+        ["deband"]            = "yes",
+        ["deband-iterations"] = "4",
+        ["deband-grain"]      = "32",
 
         --["icc-profile-auto"]    = "",
         --["3dlut-size"]        = "256x256x256",
+        --["icc-cache-dir"]     = "~~/icc-cache",
     },
 
     [o.mq] = {
@@ -81,13 +83,15 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "",
-        ["sigmoid-upscaling"]   = "",
+        ["scaler-resizes-only"] = "yes",
+        ["sigmoid-upscaling"]   = "yes",
         ["blend-subtitles"]     = "yes",
 
         ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
-        ["fancy-downscaling"] = "",
-        ["source-shader"]     = "~~/shaders/deband.glsl",
+        ["fancy-downscaling"] = "yes",
+        ["deband"]            = "yes",
+        ["deband-iterations"] = "2",
+        ["deband-grain"]      = "32",
     },
 
     [o.lq] = {
@@ -97,8 +101,8 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "",
-        ["sigmoid-upscaling"]   = "",
+        ["scaler-resizes-only"] = "yes",
+        ["sigmoid-upscaling"]   = "yes",
         ["blend-subtitles"]     = "yes",
 
         --["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
