@@ -17,7 +17,7 @@ th_flow_diff  = 8*8*7
 # (threshold/255)% blocks have to change to consider this a scene change
 # (= no motion compensation), default 130
 th_block_changed = 14
-th_flow_changed  = 18
+th_flow_changed  = 14
 # size of blocks the analyse step is performed on
 blocksize  = 2**4
 
