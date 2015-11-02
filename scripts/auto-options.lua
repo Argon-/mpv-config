@@ -65,8 +65,6 @@ vo_opts = {
         ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
         ["fancy-downscaling"] = "yes",
         ["deband"]            = "yes",
-        ["deband-iterations"] = "4",
-        ["deband-grain"]      = "32",
 
         --["icc-profile-auto"]    = "",
         --["3dlut-size"]        = "256x256x256",
@@ -90,8 +88,6 @@ vo_opts = {
         ["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
         ["fancy-downscaling"] = "yes",
         ["deband"]            = "yes",
-        ["deband-iterations"] = "2",
-        ["deband-grain"]      = "32",
     },
 
     [o.lq] = {
