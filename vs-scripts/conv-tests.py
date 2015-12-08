@@ -51,6 +51,11 @@ def emboss2(m=0):
                       [-1,  m,  1],
                       [ 0,  1,  2]])
 
+def test(m=0, r=0):
+    return np.matrix([[ 4, 2, 4],
+                      [ 2, 1, 2],
+                      [ 4, 2, 4]])
+
 
 class Conv:
     def __init__(self, planes=[0, 1, 2], mult=0, mat=None, bias=0):
@@ -88,11 +93,11 @@ class Conv:
 
 convs = []
 #convs.append(Conv(planes=[0], mult=1/sharpen5x5().sum(), mat=sharpen5x5()))
-convs.append(Conv(planes=[1,2], mat=sharpen5x5()))
+#convs.append(Conv(planes=[1,2], mat=sharpen5x5()))
 #convs.append(Conv(planes=[0], mat=sharpen5x5()))
 #convs.append(Conv(planes=[1,2], mat=outline(9)))
-convs.append(Conv(planes=[0], mat=emboss1(1)))
-#convs.append(Conv(planes=[0], mat=mean()))
+#convs.append(Conv(planes=[0], mat=emboss1(1)))
+convs.append(Conv(planes=[0], mat=test()))
 
 
 
