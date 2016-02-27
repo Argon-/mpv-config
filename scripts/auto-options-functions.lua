@@ -62,6 +62,9 @@ end
 
 -- Determine if the currently used resolution is higher than o.highres_threshold
 function is_high_res(o)
+    if o.force_low_res then
+        return false
+    end
     sp_ret = exec({"/usr/local/bin/resolution", "compare", o.highres_threshold})
     return not sp_ret.error and sp_ret.status > 2
 end

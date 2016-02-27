@@ -29,6 +29,7 @@ local o = {
     mq = "laptop",
     lq = "laptop (low-power)",
     highres_threshold = "1920:1200",
+    force_low_res = false,
     verbose = false,
     duration = 5,
     duration_err_mult = 2,
@@ -52,7 +53,7 @@ vo_opts = {
         ["scale"]  = "ewa_lanczossharp",
         ["cscale"] = "ewa_lanczossoft",
         ["dscale"] = "mitchell",
-        ["tscale"] = "oversample",
+        ["tscale"] = "triangle",
         ["scale-antiring"]  = "0.8",
         ["cscale-antiring"] = "0.9",
 
@@ -80,7 +81,7 @@ vo_opts = {
         ["scale"]  = "spline36",
         ["cscale"] = "spline36",
         ["dscale"] = "mitchell",
-        ["tscale"] = "oversample",
+        ["tscale"] = "triangle",
         ["scale-antiring"]  = "0.8",
         ["cscale-antiring"] = "0.9",
 
@@ -90,7 +91,7 @@ vo_opts = {
         ["sigmoid-upscaling"]   = "yes",
         ["blend-subtitles"]     = "yes",
 
-        --["interpolation"]       = function () return is_high_res(o) and "no" or "yes" end,
+        ["interpolation"]       = function () return is_high_res(o) and "no" or "yes" end,
         ["correct-downscaling"] = "yes",
         ["deband"]              = "yes",
 
@@ -99,7 +100,7 @@ vo_opts = {
     [o.lq] = {
         ["scale"]  = "spline36",
         ["dscale"] = "mitchell",
-        ["tscale"] = "oversample",
+        ["tscale"] = "triangle",
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
@@ -124,7 +125,7 @@ options = {
 
     [o.mq] = {
         ["options/vo"] = function () return vo_property_string(o.mq, vo, vo_opts) end,
-        --["options/video-sync"] = function () return is_high_res(o) and "audio" or "display-resample" end,
+        ["options/video-sync"] = function () return is_high_res(o) and "audio" or "display-resample" end,
         ["options/hwdec"] = "no",
     },
 
@@ -144,6 +145,7 @@ mp.observe_property("vo-configured", "bool",
 -- Determined level and set the appropriate options
 
 function main()
+    o.force_low_res = mp.get_opt("ao-flr")
     o.level = determine_level(o, vo, vo_opts, options)
     o.err_occ = false
     for k, v in pairs(options[o.level]) do
