@@ -14,7 +14,6 @@ local o = {
 }
 opts.read_options(o)
 
--- TODO: nur auf quit reagieren und write-watch-later-config nutzen
 
 -- Set thresh_* from command line by using --script-opts=ass-thresh_*=t
 t = tonumber(mp.get_opt("ass-thresh_end"))
@@ -48,11 +47,11 @@ end
 
 
 -- Check by polling
-timer = mp.add_periodic_timer(o.timer_wait, check_time)
+--timer = mp.add_periodic_timer(o.timer_wait, check_time)
 -- Check on every seek
-mp.register_event("seek", check_time)
+--mp.register_event("seek", check_time)
 -- Check on every (un)pause
-mp.observe_property("pause", "bool", check_time)
+--mp.observe_property("pause", "bool", check_time)
 -- Check on every quit
 mp.add_key_binding("q", "quit-check-time", function()
                         check_time()
