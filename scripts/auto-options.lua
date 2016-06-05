@@ -59,22 +59,7 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "yes",
-        ["sigmoid-upscaling"]   = "yes",
-        ["blend-subtitles"]     = "no",
-
-        ["interpolation"]       = function () return is_high_res(o) and "no" or "yes" end,
         ["correct-downscaling"] = "yes",
-        ["deband"]              = "yes",
-
-        --["icc-profile-auto"]    = "",
-        --["3dlut-size"]        = "256x256x256",
-        --["icc-cache-dir"]     = "~~/icc-cache",
-
-        ["prescale"] = "nnedi3",
-        ["nnedi3-neurons"] = "32",
-        ["nnedi3-window"] = "8x6",
-        ["nnedi3-upload"] = "shader",
     },
 
     [o.mq] = {
@@ -87,14 +72,7 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "yes",
-        ["sigmoid-upscaling"]   = "yes",
-        ["blend-subtitles"]     = "yes",
-
-        ["interpolation"]       = function () return is_high_res(o) and "no" or "yes" end,
         ["correct-downscaling"] = "yes",
-        ["deband"]              = "yes",
-
     },
 
     [o.lq] = {
@@ -104,11 +82,7 @@ vo_opts = {
 
         ["dither-depth"]        = "auto",
         ["target-prim"]         = "bt.709",
-        ["scaler-resizes-only"] = "yes",
-        ["sigmoid-upscaling"]   = "yes",
-        ["blend-subtitles"]     = "yes",
-
-        --["interpolation"]     = function () return is_high_res(o) and "no" or "yes" end,
+        ["correct-downscaling"] = "yes",
     },
 }
 
@@ -118,14 +92,12 @@ vo_opts = {
 options = {
     [o.hq] = {
         ["options/vo"] = function () return vo_property_string(o.hq, vo, vo_opts) end,
-        ["options/video-sync"] = function () return is_high_res(o) and "audio" or "display-resample" end,
         ["options/hwdec"] = "no",
         ["options/vd-lavc-threads"] = "16",
     },
 
     [o.mq] = {
         ["options/vo"] = function () return vo_property_string(o.mq, vo, vo_opts) end,
-        ["options/video-sync"] = function () return is_high_res(o) and "audio" or "display-resample" end,
         ["options/hwdec"] = "no",
     },
 
