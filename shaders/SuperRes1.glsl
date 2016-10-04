@@ -1,1 +1,0 @@
-SuperRes/SuperRes1.glsl

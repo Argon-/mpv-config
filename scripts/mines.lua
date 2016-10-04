@@ -1,0 +1,1 @@
+mpv-scripts/mines.lua

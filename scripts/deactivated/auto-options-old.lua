@@ -59,6 +59,7 @@ local options = {
     [o.mq] = {
         ["vo"] = "opengl",
         ["scale"]  = "spline36",
+        ["cscale"] = "spline36",
         ["dscale"] = "mitchell",
         ["tscale"] = "linear",
         ["dither-depth"]        = "auto",
