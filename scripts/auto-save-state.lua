@@ -14,6 +14,19 @@ local o = {
 opts.read_options(o)
 
 
+-- Return true when multiple files are being played
+function check_playlist()
+    local pcount, err = mp.get_property_number("playlist-count")
+    if not pcount then
+        print("error: " .. err)
+        pcount = 1
+    end
+
+    return pcount > 1
+end
+
+
+-- Return true when the current playback time is not too close to the start or end
 function check_time()
     local remaining, err = mp.get_property_number("time-remaining")
     if not remaining then
@@ -26,16 +39,12 @@ function check_time()
         pos = -math.huge
     end
 
-    if o.thresh_end > remaining or pos < o.thresh_start then
-        mp.set_property_bool("options/save-position-on-quit", false)
-    else
-        mp.set_property_bool("options/save-position-on-quit", true)
-    end
+    return pos > o.thresh_start and remaining > o.thresh_end
 end
 
 
 mp.add_forced_key_binding("q", "quit-watch-later-conditional",
     function()
-        check_time()
+        mp.set_property_bool("options/save-position-on-quit", check_playlist() or check_time())
         mp.command("quit")
     end)
