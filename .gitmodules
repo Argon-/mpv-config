@@ -1,0 +1,21 @@
+[submodule "scripts/mpv-scripts"]
+	path = scripts/mpv-scripts
+	url = git@github.com:Argon-/mpv-scripts.git
+[submodule "scripts/mpv-repl"]
+	path = scripts/mpv-repl
+	url = git@github.com:rossy/mpv-repl.git
+[submodule "shaders/AdaptiveSharpen"]
+	path = shaders/AdaptiveSharpen
+	url = git@gist.github.com:8a77e4eb8276753b54bb94c1c50c317e.git
+[submodule "shaders/mpv-prescalers"]
+	path = shaders/mpv-prescalers
+	url = https://github.com/bjin/mpv-prescalers
+[submodule "shaders/SSimDownscaler"]
+	path = shaders/SSimDownscaler
+	url = git@gist.github.com:36508af3ffc84410fe39761d6969be10.git
+[submodule "shaders/SSimSuperRes"]
+	path = shaders/SSimSuperRes
+	url = git@gist.github.com:2364ffa6e81540f29cb7ab4c9bc05b6b.git
+[submodule "shaders/FineSharp"]
+	path = shaders/FineSharp
+	url = git@gist.github.com:a9a21ad1f6dd7d0b4452.git
