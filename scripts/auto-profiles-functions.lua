@@ -11,14 +11,12 @@ local function exec(process)
     return p_ret
 end
 
-
 -- location (assumed to be immutable)
 local loc = exec({"bash", "-c", 'source "$HOME"/local/shell/location-detection && is-desktop'})
 if loc.error then
     msg.error("location detection failed")
     loc.status = 255
 end
-
 
 function is_desktop()
     --local loc = exec({"bash", "-c", 'source "$HOME"/local/shell/location-detection && is-desktop'})
@@ -30,12 +28,12 @@ function is_laptop()
     return loc.status == 1
 end
 
-function on_battery()
+local function on_battery()
     local bat = exec({"/usr/bin/pmset", "-g", "ac"})
     return bat.stdout == "No adapter attached.\n"
 end
 
-function display_res_height()
+local function display_res_height()
     local sp_ret = exec({"/usr/local/bin/resolution", "unscaled-height"})
     if sp_ret.error then
         sp_ret.stdout = math.huge
@@ -43,7 +41,7 @@ function display_res_height()
     return to_number(sp_ret.stdout)
 end
 
-function display_res_width()
+local function display_res_width()
     local sp_ret = exec({"/usr/local/bin/resolution", "unscaled-width"})
     if sp_ret.error then
         sp_ret.stdout = math.huge
@@ -51,7 +49,7 @@ function display_res_width()
     return to_number(sp_ret.stdout)
 end
 
-function display_scale_factor()
+local function display_scale_factor()
     local sp_ret = exec({"/usr/local/bin/resolution", "scale"})
     if sp_ret.error then
         sp_ret.stdout = 1.0

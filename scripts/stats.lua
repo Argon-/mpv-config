@@ -1,1 +1,1 @@
-/Users/Julian/Documents/Code/Lua/mpv-stats/stats.lua
+/Users/Julian/Documents/Code/mpv/mpv-stats/stats.lua
