@@ -8,6 +8,7 @@
 
 local opts = require 'mp.options'
 local o = {
+    min_length = 600,
     thresh_end = 180,
     thresh_start = 60,
 }
@@ -27,7 +28,13 @@ end
 
 
 -- Return true when the current playback time is not too close to the start or end
+-- Always return false for short files, no matter the playback time
 function check_time()
+    local duration = mp.get_property_number("duration", 9999)
+    if duration < o.min_length then
+        return false
+    end
+
     local remaining, err = mp.get_property_number("time-remaining")
     if not remaining then
         print("error: " .. err)
