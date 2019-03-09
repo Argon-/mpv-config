@@ -1,4 +1,4 @@
--- Taken from https://github.com/mpv-player/mpv/issues/4738#issuecomment-321298846
+-- From: https://github.com/mpv-player/mpv/issues/4738#issuecomment-321298846
 
 function chapter_seek(direction)
     local chapters = mp.get_property_number("chapters")

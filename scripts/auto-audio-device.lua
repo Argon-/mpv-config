@@ -10,7 +10,7 @@ local av_map = {
 }
 
 function set_audio_device(obs_display)
-    if not auto_change then
+    if obs_display ~= nil and not auto_change then
         return
     end
     
@@ -21,13 +21,16 @@ function set_audio_device(obs_display)
     end
 
     local new_adev = av_map[display[1]] or av_map["default"]
-    local current_adev = mp.get_property("audio-device", "auto")
+    local current_adev = mp.get_property("audio-device", av_map["default"])
     if new_adev ~= current_adev then
         mp.osd_message("Audio device: " .. new_adev)
         mp.set_property("audio-device", new_adev)
     end
 end
 
-mp.add_key_binding("", "set-auto-audio-device", function() set_audio_device(nil) end)
-mp.add_key_binding("", "toggle-auto-audio-device", function() auto_change = not auto_change end)
 mp.observe_property("display-names", "native", function(name, value) set_audio_device(value) end)
+mp.add_key_binding("", "set-audio-device", function() set_audio_device(nil) end)
+mp.add_key_binding("", "toggle-switching", function() 
+    auto_change = not auto_change
+    mp.osd_message("Audio device switching: " .. tostring(auto_change)) 
+end)

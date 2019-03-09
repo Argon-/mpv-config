@@ -1,4 +1,4 @@
--- Source/Copyright: https://github.com/occivink/mpv-scripts
+-- From: https://github.com/occivink/mpv-scripts
 
 opts = {
     blacklist="",
