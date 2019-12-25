@@ -16,7 +16,7 @@ function set_audio_device(obs_display)
     
     local display = obs_display or mp.get_property_native("display-names")
     if not display or not display[1] then
-        print("Invalid display return value: " .. tostring(display))
+        --print("Invalid display return value: " .. tostring(display))
         return
     end
 

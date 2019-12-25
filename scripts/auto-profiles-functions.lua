@@ -13,7 +13,7 @@ local exec_cache = {}
 local function exec(process, force_exec)
     local key = table.concat(process, " ")
     if force_exec or exec_cache[key] == nil or exec_cache[key].error then
-        local p_ret = utils.subprocess({args = process})
+        local p_ret = utils.subprocess({args = process, playback_only = false})
         exec_cache[key] = p_ret
         if p_ret.error and p_ret.error == "init" then
             msg.error("executable not found: " .. key)
@@ -47,9 +47,9 @@ function on_battery()
         return res.stdout == "0\n"
     elseif is_windows then
         msg.warn("on_battery() not implemented on windows. PRs welcome")
-        msg.warn("assuming AC power")
-        return false
     end
+    msg.warn("assuming AC power")
+    return false
 end
 
 
@@ -67,9 +67,9 @@ function dedicated_gpu()
         return string.find(r.stdout, "amd") ~= nil or string.find(r.stdout, "nvidia") ~= nil
     elseif is_windows then
         msg.warn("dedicated_gpu() not implemented on windows. PRs welcome")
-        msg.warn("assuming dedicated GPU")
-        return true
     end
+    msg.warn("assuming dedicated GPU")
+    return true
 end
 
 
