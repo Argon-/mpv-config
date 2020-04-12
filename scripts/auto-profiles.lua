@@ -1,1 +1,1 @@
-mpv-scripts/auto-profiles.lua
+mpv-scripts.disable/auto-profiles.lua

@@ -1,8 +1,8 @@
 [submodule "scripts/mpv-scripts"]
-	path = scripts/mpv-scripts
+	path = scripts/mpv-scripts.disable
 	url = git@github.com:Argon-/mpv-scripts.git
 [submodule "scripts/mpv-repl"]
-	path = scripts/mpv-repl
+	path = scripts/mpv-repl.disable
 	url = git@github.com:rossy/mpv-repl.git
 [submodule "shaders/AdaptiveSharpen"]
 	path = shaders/AdaptiveSharpen

@@ -50,6 +50,10 @@ end
 
 mp.add_key_binding("q", "quit-watch-later-conditional",
     function()
-        mp.set_property_bool("options/save-position-on-quit", check_playlist() or check_time())
-        mp.command("quit")
+        --mp.set_property_bool("options/save-position-on-quit", check_playlist() or check_time())
+        if check_playlist() or check_time() then
+            mp.command("quit-watch-later")
+        else
+            mp.command("quit")
+        end
     end)

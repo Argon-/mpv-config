@@ -1,1 +1,1 @@
-mpv-scripts/fix-sub-timing.lua
+mpv-scripts.disable/fix-sub-timing.lua
