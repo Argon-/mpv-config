@@ -41,7 +41,7 @@ end
 function on_battery()
     if is_osx then
         local bat = exec({"/usr/bin/pmset", "-g", "batt"}, true)
-        return string.match(bat.stdout, "Now drawing from 'Battery Power'")
+        return string.match(bat.stdout, "Now drawing from 'Battery Power'") ~= nil
     elseif is_linux then
         local res = exec({"/bin/cat", "/sys/class/power_supply/AC/online"}, true)
         return res.stdout == "0\n"
@@ -56,49 +56,41 @@ end
 -- This is a crude attempt to figure out if a (beefy) dedicated GPU is present.
 -- Can't identify the actually used GPU but works when we assume that an existing
 -- dedicated GPU can/will be used in case we are drawing power from AC.
-function dedicated_gpu()
-    if is_osx then
-        local r = exec({"system_profiler", "SPDisplaysDataType"})
-        return string.find(r.stdout, "Chipset Model: Radeon") ~= nil or string.find(r.stdout, "Chipset Model: NVIDIA GeForce") ~= nil
-    -- Untested
-    elseif is_linux then
-        local r = exec({"lshw", "-C", 'display'})
-        r.stdout = string.lower(r.stdout)
-        return string.find(r.stdout, "amd") ~= nil or string.find(r.stdout, "nvidia") ~= nil
-    elseif is_windows then
-        msg.warn("dedicated_gpu() not implemented on windows. PRs welcome")
-    end
-    msg.warn("assuming dedicated GPU")
-    return true
-end
+-- function dedicated_gpu()
+--     if is_osx then
+--         local r = exec({"system_profiler", "SPDisplaysDataType"})
+--         return string.find(r.stdout, "Chipset Model: AMD Radeon") ~= nil or string.find(r.stdout, "Chipset Model: NVIDIA GeForce") ~= nil
+--     -- Untested
+--     elseif is_linux then
+--         local r = exec({"lshw", "-C", 'display'})
+--         r.stdout = string.lower(r.stdout)
+--         return string.find(r.stdout, "amd") ~= nil or string.find(r.stdout, "nvidia") ~= nil
+--     elseif is_windows then
+--         msg.warn("dedicated_gpu() not implemented on windows. PRs welcome")
+--     end
+--     msg.warn("assuming dedicated GPU")
+--     return true
+-- end
 
 
 local function determine_level(width, height, fps)
     if on_battery() then
-        return LOW
-    end
-
-    if dedicated_gpu() then
-        if width > 4096 then
-            return MID
-        end
-        if width > 1920 and fps > 61 then
-            return MID
-        end
-        return HIGH
-    else
-        if width > 1919 then
-            return LOW
-        end
-        if fps > 58 then
+        -- if it's high fps (>61) or both UHD resolution and kind of high fps
+        if fps > 61 or (width > 3841 and fps > 31) then
             return LOW
         end
         return MID
+    else
+        -- if it's high fps (>61) or both UHD resolution and high fps
+        if fps > 61 or (width > 3841 and fps > 61) then
+            return MID
+        end
+        return HIGH
     end
-    
+
     msg.error("could not determine profile")
-    msg.warn("assuming HIGH")
-    return HIGH
+    msg.warn("assuming LOW")
+    return LOW
 end
 
 

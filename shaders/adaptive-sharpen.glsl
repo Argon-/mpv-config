@@ -1,1 +1,0 @@
-AdaptiveSharpen/adaptive-sharpen.glsl

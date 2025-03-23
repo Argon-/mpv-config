@@ -1,1 +1,0 @@
-SSimDownscaler/SSimDownscaler.glsl

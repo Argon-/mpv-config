@@ -1,1 +1,0 @@
-KrigBilateral/KrigBilateral.glsl

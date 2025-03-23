@@ -1,1 +1,0 @@
-SSimSuperRes/SSimSuperRes.glsl
